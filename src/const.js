@@ -33,6 +33,15 @@ const Emotion = {
 
 const EMOTIONS = [Emotion.ANGRY, Emotion.PUKE, Emotion.SLEEPING, Emotion.SMILE];
 
+const FilterTitle = {
+  ALL: `All movies`,
+  FAVORITES: `Favorites`,
+  HISTORY: `History`,
+  WATCHLIST: `Watchlist`,
+};
+
+// const FILTER_TITLES = [FilterTitle.ALL, FilterTitle.WATCHLIST, FilterTitle.HISTORY, FilterTitle.FAVORITES];
+
 const Genre = {
   ACTION: `action`,
   ADVENTURE: `adventure`,
@@ -105,6 +114,7 @@ export {
   DESCRIPTION_ITEMS,
   FILM_CARDS_COUNT,
   FILM_CARDS_EXTRA_COUNT,
+  FilterTitle,
   EMOTIONS,
   GENRE_ITEMS,
   POSTER_ITEMS,

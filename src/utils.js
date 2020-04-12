@@ -1,4 +1,4 @@
-import {ProfileRating} from './const.js';
+import {FilterTitle, ProfileRating} from './const.js';
 
 const getRandomBoolean = () => Math.random() > 0.5;
 
@@ -39,4 +39,25 @@ const getProfileRating = (count) => {
   return result;
 };
 
-export {getRandomArrayItem, getRandomBoolean, getRandomDecimalNumber, getRandomIntegerNumber, getRandomDate, getProfileRating};
+const getWatchedFilmsCount = (films) => {
+  return films.filter((item) => item.userDetails.isAlreadyWatched).length;
+};
+
+const getFilters = (films) => {
+  const favoritesCount = films.filter((item) => item.userDetails.isFavorite).length;
+  const watchlistCount = films.filter((item) => item.userDetails.isInWatchlist).length;
+  const alreadyWatchedCount = getWatchedFilmsCount(films);
+
+  return [{
+    name: FilterTitle.WATCHLIST,
+    count: watchlistCount
+  }, {
+    name: FilterTitle.HISTORY,
+    count: alreadyWatchedCount
+  }, {
+    name: FilterTitle.FAVORITES,
+    count: favoritesCount
+  }];
+};
+
+export {getRandomArrayItem, getRandomBoolean, getRandomDecimalNumber, getRandomIntegerNumber, getRandomDate, getProfileRating, getFilters, getWatchedFilmsCount};
