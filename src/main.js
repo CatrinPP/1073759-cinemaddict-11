@@ -6,13 +6,13 @@ import {createFilmsListTemplate} from './components/films-list.js';
 import {createFilmsListExtraTemplate} from './components/films-list-extra.js';
 import {createShowMoreButton} from './components/show-more-button.js';
 import {createFilmCardTemplate} from './components/film-card.js';
+import {generateFilms} from './mock/film.js';
+import {FILM_CARDS_COUNT, FILM_CARDS_EXTRA_COUNT} from './const.js';
 // import {createFilmDetailsTemplate} from './components/films-details.js';
-
-const FILMS_CARDS_COUNT = 5;
-const FILMS_CARDS_EXTRA_COUNT = 2;
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
+const films = generateFilms();
 
 const render = (container, template, place = `beforeend`) => {
   container.insertAdjacentHTML(place, template);
@@ -38,14 +38,14 @@ const filmsListExtraContainerElements = filmsElement.querySelectorAll(`.films-li
 
 const renderFilmCards = (container, count) => {
   for (let i = 0; i < count; i++) {
-    render(container, createFilmCardTemplate());
+    render(container, createFilmCardTemplate(films[i]));
   }
 };
 
-renderFilmCards(filmsListContainerElement, FILMS_CARDS_COUNT);
+renderFilmCards(filmsListContainerElement, FILM_CARDS_COUNT);
 
 filmsListExtraContainerElements.forEach((extraContainer) => {
-  renderFilmCards(extraContainer, FILMS_CARDS_EXTRA_COUNT);
+  renderFilmCards(extraContainer, FILM_CARDS_EXTRA_COUNT);
 });
 
 // render(document.body, createFilmDetailsTemplate());

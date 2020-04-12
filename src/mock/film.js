@@ -23,7 +23,7 @@ const getDescription = () => {
 
 const generateFilm = () => {
   const title = getRandomArrayItem(TITLE_ITEMS);
-  const genre = GENRE_ITEMS.filter(() => Math.random() > 0.5).join(`, `);
+  const genre = GENRE_ITEMS.filter(() => Math.random() > 0.5);
 
   return {
     comments: getComments(getRandomIntegerNumber(0, 5)),
