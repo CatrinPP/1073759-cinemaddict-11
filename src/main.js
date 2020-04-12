@@ -8,7 +8,7 @@ import {createShowMoreButton} from './components/show-more-button.js';
 import {createFilmCardTemplate} from './components/film-card.js';
 import {generateFilms} from './mock/film.js';
 import {FILM_CARDS_COUNT, FILM_CARDS_EXTRA_COUNT} from './const.js';
-// import {createFilmDetailsTemplate} from './components/films-details.js';
+import {createFilmDetailsTemplate} from './components/films-details.js';
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
@@ -48,4 +48,4 @@ filmsListExtraContainerElements.forEach((extraContainer) => {
   renderFilmCards(extraContainer, FILM_CARDS_EXTRA_COUNT);
 });
 
-// render(document.body, createFilmDetailsTemplate());
+render(document.body, createFilmDetailsTemplate(films[0]));
