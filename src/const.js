@@ -2,6 +2,7 @@ const FILM_CARDS_COUNT = 20;
 const FILM_CARDS_EXTRA_COUNT = 2;
 const SHOWING_CARDS_COUNT_BY_BUTTON = 5;
 const SHOWING_CARDS_COUNT_ON_START = 5;
+const ESC_KEYCODE = 27;
 
 const COMMENT_TEXTS = [
   `Almost two hours? Seriously?`,
@@ -82,6 +83,11 @@ const ProfileRating = {
   NOVICE: `Novice`,
 };
 
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
+};
+
 const TITLE_ITEMS = [
   `Kingdom Of Heaven`,
   `Lara Croft: Tomb Raider`,
@@ -116,9 +122,11 @@ export {
   FILM_CARDS_EXTRA_COUNT,
   FilterTitle,
   EMOTIONS,
+  ESC_KEYCODE,
   GENRE_ITEMS,
   POSTER_ITEMS,
   ProfileRating,
+  RenderPosition,
   SHOWING_CARDS_COUNT_BY_BUTTON,
   SHOWING_CARDS_COUNT_ON_START,
   TITLE_ITEMS,
