@@ -1,10 +1,12 @@
+import {createElement} from '../utils.js';
+
 const createFilterMarkup = (filter) => {
   return (
     `<a href="#watchlist" class="main-navigation__item">${filter.name} <span class="main-navigation__item-count">${filter.count}</span></a>`
   );
 };
 
-export const createMainNavigationTemplate = (data) => {
+const createMainNavigationTemplate = (data) => {
   const filters = data.map((item) => createFilterMarkup(item)).join(`\n`);
 
   return (
@@ -17,3 +19,27 @@ export const createMainNavigationTemplate = (data) => {
     </nav>`
   );
 };
+
+export default class MainNavigation {
+  constructor(data) {
+    this._data = data;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createMainNavigationTemplate(this._data);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,6 +1,6 @@
-import {getProfileRating} from "../utils";
+import {createElement, getProfileRating} from "../utils";
 
-export const createProfileTemplate = (count) => {
+const createProfileTemplate = (count) => {
   const profileRating = getProfileRating(count);
 
   return (
@@ -10,3 +10,27 @@ export const createProfileTemplate = (count) => {
     </section>`
   );
 };
+
+export default class Profile {
+  constructor(count) {
+    this._count = count;
+
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createProfileTemplate(this._count);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
