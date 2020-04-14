@@ -82,6 +82,11 @@ const ProfileRating = {
   NOVICE: `Novice`,
 };
 
+const RenderPosition = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`
+};
+
 const TITLE_ITEMS = [
   `Kingdom Of Heaven`,
   `Lara Croft: Tomb Raider`,
@@ -119,6 +124,7 @@ export {
   GENRE_ITEMS,
   POSTER_ITEMS,
   ProfileRating,
+  RenderPosition,
   SHOWING_CARDS_COUNT_BY_BUTTON,
   SHOWING_CARDS_COUNT_ON_START,
   TITLE_ITEMS,

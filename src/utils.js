@@ -1,4 +1,4 @@
-import {FilterTitle, ProfileRating} from './const.js';
+import {FilterTitle, ProfileRating, RenderPosition} from './const.js';
 
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
@@ -67,6 +67,18 @@ const getFilters = (films) => {
   }];
 };
 
+const render = (container, element, place) => {
+  switch (place) {
+    case RenderPosition.AFTERBEGIN:
+      container.prepend(element);
+      break;
+
+    case RenderPosition.BEFOREEND:
+      container.append(element);
+      break;
+  }
+};
+
 export {
   createElement,
   getFilters,
@@ -76,5 +88,6 @@ export {
   getRandomDate,
   getRandomDecimalNumber,
   getRandomIntegerNumber,
-  getWatchedFilmsCount
+  getWatchedFilmsCount,
+  render,
 };
