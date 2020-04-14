@@ -3,6 +3,7 @@ import MainNavigation from './components/main-navigation.js';
 import Sort from './components/sort.js';
 import Films from './components/films.js';
 import FilmsList from './components/films-list.js';
+import NoFilms from './components/no-films.js';
 import FilmsListExtra from './components/films-list-extra.js';
 import ShowMoreButton from './components/show-more-button.js';
 import FilmCard from './components/film-card.js';
@@ -18,6 +19,7 @@ const footerElement = document.querySelector(`.footer`);
 
 const films = generateFilms();
 const wathedFilmsCount = getWatchedFilmsCount(films);
+const filters = getFilters(films);
 
 const renderFilmCards = (array, container, count) => {
   for (let i = 0; i < count; i++) {
@@ -61,16 +63,17 @@ const renderFilmCards = (array, container, count) => {
 };
 
 const renderFilmsCatalog = () => {
+  render(mainElement, new Films().getElement(), RenderPosition.BEFOREEND);
+  const filmsElement = mainElement.querySelector(`.films`);
+
+  if (!films.length) {
+    render(filmsElement, new NoFilms().getElement(), RenderPosition.BEFOREEND);
+    return;
+  }
+
   let showingFilmCardsCount = SHOWING_CARDS_COUNT_ON_START;
-  const filters = getFilters(films);
   const filmsSortedByRating = films.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
   const filmsSortedByCommentsCount = films.slice().sort((a, b) => b.comments.length - a.comments.length);
-
-  render(mainElement, new MainNavigation(filters).getElement(), RenderPosition.BEFOREEND);
-  render(mainElement, new Sort().getElement(), RenderPosition.BEFOREEND);
-  render(mainElement, new Films().getElement(), RenderPosition.BEFOREEND);
-
-  const filmsElement = mainElement.querySelector(`.films`);
 
   render(filmsElement, new FilmsList().getElement(), RenderPosition.BEFOREEND);
   render(filmsElement, new FilmsListExtra(`Top rated`).getElement(), RenderPosition.BEFOREEND);
@@ -108,4 +111,6 @@ const renderFilmsCatalog = () => {
 
 render(headerElement, new Profile(wathedFilmsCount).getElement(), RenderPosition.BEFOREEND);
 render(footerElement, new FooterStatistics(films.length).getElement(), RenderPosition.BEFOREEND);
+render(mainElement, new MainNavigation(filters).getElement(), RenderPosition.BEFOREEND);
+render(mainElement, new Sort().getElement(), RenderPosition.BEFOREEND);
 renderFilmsCatalog();
