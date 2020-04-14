@@ -2,6 +2,7 @@ const FILM_CARDS_COUNT = 20;
 const FILM_CARDS_EXTRA_COUNT = 2;
 const SHOWING_CARDS_COUNT_BY_BUTTON = 5;
 const SHOWING_CARDS_COUNT_ON_START = 5;
+const ESC_KEYCODE = 27;
 
 const COMMENT_TEXTS = [
   `Almost two hours? Seriously?`,
@@ -121,6 +122,7 @@ export {
   FILM_CARDS_EXTRA_COUNT,
   FilterTitle,
   EMOTIONS,
+  ESC_KEYCODE,
   GENRE_ITEMS,
   POSTER_ITEMS,
   ProfileRating,
