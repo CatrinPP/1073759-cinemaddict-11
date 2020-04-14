@@ -1,5 +1,12 @@
 import {FilterTitle, ProfileRating} from './const.js';
 
+const createElement = (template) => {
+  const newElement = document.createElement(`div`);
+  newElement.innerHTML = template;
+
+  return newElement.firstChild;
+};
+
 const getRandomBoolean = () => Math.random() > 0.5;
 
 const getRandomIntegerNumber = (min, max) => {
@@ -60,4 +67,14 @@ const getFilters = (films) => {
   }];
 };
 
-export {getRandomArrayItem, getRandomBoolean, getRandomDecimalNumber, getRandomIntegerNumber, getRandomDate, getProfileRating, getFilters, getWatchedFilmsCount};
+export {
+  createElement,
+  getFilters,
+  getProfileRating,
+  getRandomArrayItem,
+  getRandomBoolean,
+  getRandomDate,
+  getRandomDecimalNumber,
+  getRandomIntegerNumber,
+  getWatchedFilmsCount
+};
