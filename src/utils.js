@@ -79,6 +79,11 @@ const render = (container, element, place) => {
   }
 };
 
+const remove = (component) => {
+  component.getElement().remove();
+  component.removeElement();
+};
+
 export {
   createElement,
   getFilters,
@@ -89,5 +94,6 @@ export {
   getRandomDecimalNumber,
   getRandomIntegerNumber,
   getWatchedFilmsCount,
+  remove,
   render,
 };
