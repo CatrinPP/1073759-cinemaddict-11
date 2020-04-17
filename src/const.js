@@ -88,6 +88,12 @@ const RenderPosition = {
   BEFOREEND: `beforeend`
 };
 
+const SortType = {
+  DATE: `date`,
+  DEFAULT: `default`,
+  RATING: `rating`,
+};
+
 const TITLE_ITEMS = [
   `Kingdom Of Heaven`,
   `Lara Croft: Tomb Raider`,
@@ -129,5 +135,6 @@ export {
   RenderPosition,
   SHOWING_CARDS_COUNT_BY_BUTTON,
   SHOWING_CARDS_COUNT_ON_START,
+  SortType,
   TITLE_ITEMS,
 };

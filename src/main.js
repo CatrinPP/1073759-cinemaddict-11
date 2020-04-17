@@ -12,7 +12,8 @@ const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 const footerElement = document.querySelector(`.footer`);
 const filmsComponent = new FilmsComponent();
-const pageController = new PageController(filmsComponent.getElement());
+const sortComponent = new SortComponent();
+const pageController = new PageController(filmsComponent, sortComponent);
 
 const films = generateFilms();
 const wathedFilmsCount = getWatchedFilmsCount(films);
@@ -21,6 +22,6 @@ const filters = getFilters(films);
 render(headerElement, new ProfileComponent(wathedFilmsCount), RenderPosition.BEFOREEND);
 render(footerElement, new FooterStatistics(films.length), RenderPosition.BEFOREEND);
 render(mainElement, new MainNavigationComponent(filters), RenderPosition.BEFOREEND);
-render(mainElement, new SortComponent(), RenderPosition.BEFOREEND);
+render(mainElement, sortComponent, RenderPosition.BEFOREEND);
 render(mainElement, filmsComponent, RenderPosition.BEFOREEND);
 pageController.render(films);
