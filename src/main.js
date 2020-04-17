@@ -26,12 +26,6 @@ const renderFilmCards = (array, container, count) => {
     const film = array[i];
     const cardComponent = new FilmCard(film);
     const popupComponent = new FilmDetails(film);
-    const cover = cardComponent.getElement().querySelector(`.film-card__poster`);
-    const title = cardComponent.getElement().querySelector(`.film-card__title`);
-    const comments = cardComponent.getElement().querySelector(`.film-card__comments`);
-    const popupCloseButton = popupComponent.getElement().querySelector(`.film-details__close-btn`);
-    cover.style = `cursor:pointer`;
-    title.style = `cursor:pointer`;
 
     const closePopup = () => {
       remove(popupComponent);
@@ -51,13 +45,12 @@ const renderFilmCards = (array, container, count) => {
 
     const onFilmCardClick = () => {
       render(document.body, popupComponent, RenderPosition.BEFOREEND);
+      popupComponent.setClickHandler(onPopupCloseButtonClick);
       document.addEventListener(`keydown`, onEscPress);
     };
 
-    cover.addEventListener(`click`, onFilmCardClick);
-    title.addEventListener(`click`, onFilmCardClick);
-    comments.addEventListener(`click`, onFilmCardClick);
-    popupCloseButton.addEventListener(`click`, onPopupCloseButtonClick);
+    cardComponent.setClickHandler(onFilmCardClick);
+
     render(container, cardComponent, RenderPosition.BEFOREEND);
   }
 };
@@ -86,7 +79,7 @@ const renderFilmsCatalog = () => {
   const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
   const filmsListExtraElements = filmsElement.querySelectorAll(`.films-list--extra`);
 
-  showMoreButtonComponent.getElement().addEventListener(`click`, () => {
+  const onShowMoreButtonClick = () => {
     const prevFilmCardsCount = showingFilmCardsCount;
     showingFilmCardsCount = showingFilmCardsCount + SHOWING_CARDS_COUNT_BY_BUTTON;
     const filmsList = films.slice(prevFilmCardsCount, showingFilmCardsCount);
@@ -95,7 +88,9 @@ const renderFilmsCatalog = () => {
     if (showingFilmCardsCount >= films.length) {
       remove(showMoreButtonComponent);
     }
-  });
+  };
+
+  showMoreButtonComponent.setClickHandler(onShowMoreButtonClick);
 
   renderFilmCards(films, filmsListContainerElement, showingFilmCardsCount);
 
