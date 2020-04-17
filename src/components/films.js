@@ -6,7 +6,7 @@ const createFilmsTemplate = () => {
   );
 };
 
-export default class Filmsd extends AbstractComponent {
+export default class Films extends AbstractComponent {
   getTemplate() {
     return createFilmsTemplate();
   }
