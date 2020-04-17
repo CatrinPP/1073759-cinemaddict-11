@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
 const createFilterMarkup = (filter) => {
   return (
@@ -20,26 +20,13 @@ const createMainNavigationTemplate = (data) => {
   );
 };
 
-export default class MainNavigation {
+export default class MainNavigation extends AbstractComponent {
   constructor(data) {
+    super();
     this._data = data;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createMainNavigationTemplate(this._data);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

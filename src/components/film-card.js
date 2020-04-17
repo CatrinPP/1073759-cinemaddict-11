@@ -1,4 +1,4 @@
-import {createElement} from '../utils.js';
+import AbstractComponent from './abstract-component.js';
 
 const createFilmCardTemplate = (film) => {
   const genres = film.filmInfo.genre.join(`, `);
@@ -23,26 +23,26 @@ const createFilmCardTemplate = (film) => {
   );
 };
 
-export default class FilmCard {
+export default class FilmCard extends AbstractComponent {
   constructor(filmCard) {
+    super();
     this._filmCard = filmCard;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._filmCard);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
+  setClickHandler(handler) {
+    const cover = this.getElement().querySelector(`.film-card__poster`);
+    const title = this.getElement().querySelector(`.film-card__title`);
+    const comments = this.getElement().querySelector(`.film-card__comments`);
 
-    return this._element;
-  }
+    cover.style = `cursor:pointer`;
+    title.style = `cursor:pointer`;
 
-  removeElement() {
-    this._element = null;
+    cover.addEventListener(`click`, handler);
+    title.addEventListener(`click`, handler);
+    comments.addEventListener(`click`, handler);
   }
 }

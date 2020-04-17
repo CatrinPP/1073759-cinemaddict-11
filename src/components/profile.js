@@ -1,4 +1,5 @@
-import {createElement, getProfileRating} from "../utils";
+import AbstractComponent from './abstract-component.js';
+import {getProfileRating} from "../utils";
 
 const createProfileTemplate = (count) => {
   const profileRating = getProfileRating(count);
@@ -11,26 +12,13 @@ const createProfileTemplate = (count) => {
   );
 };
 
-export default class Profile {
+export default class Profile extends AbstractComponent {
   constructor(count) {
+    super();
     this._count = count;
-
-    this._element = null;
   }
 
   getTemplate() {
     return createProfileTemplate(this._count);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
