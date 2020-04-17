@@ -24,11 +24,11 @@ const filters = getFilters(films);
 const renderFilmCards = (array, container, count) => {
   for (let i = 0; i < count; i++) {
     const film = array[i];
-    const cardElement = new FilmCard(film).getElement();
+    const cardComponent = new FilmCard(film);
     const popupComponent = new FilmDetails(film);
-    const cover = cardElement.querySelector(`.film-card__poster`);
-    const title = cardElement.querySelector(`.film-card__title`);
-    const comments = cardElement.querySelector(`.film-card__comments`);
+    const cover = cardComponent.getElement().querySelector(`.film-card__poster`);
+    const title = cardComponent.getElement().querySelector(`.film-card__title`);
+    const comments = cardComponent.getElement().querySelector(`.film-card__comments`);
     const popupCloseButton = popupComponent.getElement().querySelector(`.film-details__close-btn`);
     cover.style = `cursor:pointer`;
     title.style = `cursor:pointer`;
@@ -50,7 +50,7 @@ const renderFilmCards = (array, container, count) => {
     };
 
     const onFilmCardClick = () => {
-      render(document.body, popupComponent.getElement(), RenderPosition.BEFOREEND);
+      render(document.body, popupComponent, RenderPosition.BEFOREEND);
       document.addEventListener(`keydown`, onEscPress);
     };
 
@@ -58,16 +58,16 @@ const renderFilmCards = (array, container, count) => {
     title.addEventListener(`click`, onFilmCardClick);
     comments.addEventListener(`click`, onFilmCardClick);
     popupCloseButton.addEventListener(`click`, onPopupCloseButtonClick);
-    render(container, cardElement, RenderPosition.BEFOREEND);
+    render(container, cardComponent, RenderPosition.BEFOREEND);
   }
 };
 
 const renderFilmsCatalog = () => {
-  render(mainElement, new Films().getElement(), RenderPosition.BEFOREEND);
+  render(mainElement, new Films(), RenderPosition.BEFOREEND);
   const filmsElement = mainElement.querySelector(`.films`);
 
   if (!films.length) {
-    render(filmsElement, new NoFilms().getElement(), RenderPosition.BEFOREEND);
+    render(filmsElement, new NoFilms(), RenderPosition.BEFOREEND);
     return;
   }
 
@@ -75,14 +75,14 @@ const renderFilmsCatalog = () => {
   const filmsSortedByRating = films.slice().sort((a, b) => b.filmInfo.totalRating - a.filmInfo.totalRating);
   const filmsSortedByCommentsCount = films.slice().sort((a, b) => b.comments.length - a.comments.length);
 
-  render(filmsElement, new FilmsList().getElement(), RenderPosition.BEFOREEND);
-  render(filmsElement, new FilmsListExtra(`Top rated`).getElement(), RenderPosition.BEFOREEND);
-  render(filmsElement, new FilmsListExtra(`Most commented`).getElement(), RenderPosition.BEFOREEND);
+  render(filmsElement, new FilmsList(), RenderPosition.BEFOREEND);
+  render(filmsElement, new FilmsListExtra(`Top rated`), RenderPosition.BEFOREEND);
+  render(filmsElement, new FilmsListExtra(`Most commented`), RenderPosition.BEFOREEND);
 
   const filmsListElement = filmsElement.querySelector(`.films-list`);
   const showMoreButtonComponent = new ShowMoreButton();
 
-  render(filmsListElement, showMoreButtonComponent.getElement(), RenderPosition.BEFOREEND);
+  render(filmsListElement, showMoreButtonComponent, RenderPosition.BEFOREEND);
   const filmsListContainerElement = filmsListElement.querySelector(`.films-list__container`);
   const filmsListExtraElements = filmsElement.querySelectorAll(`.films-list--extra`);
 
@@ -108,8 +108,8 @@ const renderFilmsCatalog = () => {
   });
 };
 
-render(headerElement, new Profile(wathedFilmsCount).getElement(), RenderPosition.BEFOREEND);
-render(footerElement, new FooterStatistics(films.length).getElement(), RenderPosition.BEFOREEND);
-render(mainElement, new MainNavigation(filters).getElement(), RenderPosition.BEFOREEND);
-render(mainElement, new Sort().getElement(), RenderPosition.BEFOREEND);
+render(headerElement, new Profile(wathedFilmsCount), RenderPosition.BEFOREEND);
+render(footerElement, new FooterStatistics(films.length), RenderPosition.BEFOREEND);
+render(mainElement, new MainNavigation(filters), RenderPosition.BEFOREEND);
+render(mainElement, new Sort(), RenderPosition.BEFOREEND);
 renderFilmsCatalog();
