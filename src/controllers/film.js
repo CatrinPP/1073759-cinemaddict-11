@@ -20,6 +20,7 @@ export default class FilmController {
 
   _closePopup() {
     remove(this._popupComponent);
+    this._onDataChange(this, this._film, this._film);
   }
 
   _onEscPress(evt) {
@@ -37,9 +38,6 @@ export default class FilmController {
   _onFilmCardClick() {
     render(document.body, this._popupComponent, RenderPosition.BEFOREEND);
     this._popupComponent.setClickHandler(this._onPopupCloseButtonClick);
-    this._popupComponent.setWatchlistCheckboxClickHandler(() => {});
-    this._popupComponent.setWatchedCheckboxClickHandler(() => {});
-    this._popupComponent.setFavoriteCheckboxClickHandler(() => {});
     document.addEventListener(`keydown`, this._onEscPress);
   }
 

@@ -1,4 +1,4 @@
-import AbstractComponent from './abstract-component.js';
+import AbstractSmartComponent from './abstract-smart-component.js';
 
 const createGenreItemMarkup = (genre) => {
   return (
@@ -149,7 +149,7 @@ const createFilmDetailsTemplate = (film) => {
   );
 };
 
-export default class FilmDetails extends AbstractComponent {
+export default class FilmDetails extends AbstractSmartComponent {
   constructor(filmCard) {
     super();
     this._filmCard = filmCard;
@@ -159,23 +159,27 @@ export default class FilmDetails extends AbstractComponent {
     return createFilmDetailsTemplate(this._filmCard);
   }
 
+  recoveryListeners() {
+
+  }
+
   setClickHandler(handler) {
     const popupCloseButton = this.getElement().querySelector(`.film-details__close-btn`);
     popupCloseButton.addEventListener(`click`, handler);
-  }
 
-  setWatchlistCheckboxClickHandler(handler) {
     this.getElement().querySelector(`#watchlist`)
-      .addEventListener(`click`, handler);
-  }
+      .addEventListener(`click`, () => {
+        this._filmCard.userDetails.isInWatchlist = !this._filmCard.userDetails.isInWatchlist;
+      });
 
-  setWatchedCheckboxClickHandler(handler) {
     this.getElement().querySelector(`#watched`)
-      .addEventListener(`click`, handler);
-  }
+      .addEventListener(`click`, () => {
+        this._filmCard.userDetails.isAlreadyWatched = !this._filmCard.userDetails.isAlreadyWatched;
+      });
 
-  setFavoriteCheckboxClickHandler(handler) {
     this.getElement().querySelector(`#favorite`)
-      .addEventListener(`click`, handler);
+      .addEventListener(`click`, () => {
+        this._filmCard.userDetails.isFavorite = !this._filmCard.userDetails.isFavorite;
+      });
   }
 }
