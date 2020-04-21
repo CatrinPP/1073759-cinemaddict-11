@@ -34,13 +34,19 @@ export default class FilmController {
   _onFilmCardClick() {
     render(document.body, this._popupComponent, RenderPosition.BEFOREEND);
     this._popupComponent.setClickHandler(this._onPopupCloseButtonClick);
+    this._popupComponent.setWatchlistCheckboxClickHandler(() => {});
+    this._popupComponent.setWatchedCheckboxClickHandler(() => {});
+    this._popupComponent.setFavoriteCheckboxClickHandler(() => {});
     document.addEventListener(`keydown`, this._onEscPress);
   }
 
   render(film) {
     this._cardComponent = new FilmCardComponent(film);
     this._popupComponent = new FilmDetailsComponent(film);
-    this._cardComponent.setClickHandler(this._onFilmCardClick);
+    this._cardComponent.setCardClickHandler(this._onFilmCardClick);
+    this._cardComponent.setWatchlistButtonClickHandler(() => {});
+    this._cardComponent.setWatchedButtonClickHandler(() => {});
+    this._cardComponent.setFavoriteButtonClickHandler(() => {});
 
     render(this._container, this._cardComponent, RenderPosition.BEFOREEND);
   }

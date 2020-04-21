@@ -33,7 +33,7 @@ export default class FilmCard extends AbstractComponent {
     return createFilmCardTemplate(this._filmCard);
   }
 
-  setClickHandler(handler) {
+  setCardClickHandler(handler) {
     const cover = this.getElement().querySelector(`.film-card__poster`);
     const title = this.getElement().querySelector(`.film-card__title`);
     const comments = this.getElement().querySelector(`.film-card__comments`);
@@ -45,4 +45,20 @@ export default class FilmCard extends AbstractComponent {
     title.addEventListener(`click`, handler);
     comments.addEventListener(`click`, handler);
   }
+
+  setWatchlistButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--add-to-watchlist`)
+      .addEventListener(`click`, handler);
+  }
+
+  setWatchedButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--mark-as-watched`)
+      .addEventListener(`click`, handler);
+  }
+
+  setFavoriteButtonClickHandler(handler) {
+    this.getElement().querySelector(`.film-card__controls-item--favorite`)
+      .addEventListener(`click`, handler);
+  }
+
 }
