@@ -1,13 +1,16 @@
 import FilmCardComponent from '../components/film-card.js';
 import FilmDetailsComponent from '../components/films-details.js';
 import {ESC_KEYCODE, RenderPosition} from '../const.js';
-import {remove, render} from '../utils.js';
+import {remove, render, replace} from '../utils.js';
 
 export default class FilmController {
-  constructor(container) {
+  constructor(container, onDataChange) {
     this._container = container;
+    this._onDataChange = onDataChange;
+
     this._cardComponent = null;
     this._popupComponent = null;
+    this._film = null;
 
     this._onPopupCloseButtonClick = this._onPopupCloseButtonClick.bind(this);
     this._onFilmCardClick = this._onFilmCardClick.bind(this);
@@ -41,13 +44,46 @@ export default class FilmController {
   }
 
   render(film) {
+    this._film = film;
+    const oldCard = this._cardComponent;
     this._cardComponent = new FilmCardComponent(film);
     this._popupComponent = new FilmDetailsComponent(film);
     this._cardComponent.setCardClickHandler(this._onFilmCardClick);
-    this._cardComponent.setWatchlistButtonClickHandler(() => {});
-    this._cardComponent.setWatchedButtonClickHandler(() => {});
-    this._cardComponent.setFavoriteButtonClickHandler(() => {});
+    this._cardComponent.setWatchlistButtonClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, this._film, Object.assign({}, this._film, {
+        userDetails: {
+          isInWatchlist: !this._film.userDetails.isInWatchlist,
+          isAlreadyWatched: this._film.userDetails.isAlreadyWatched,
+          isFavorite: this._film.userDetails.isFavorite,
+        }
+      }));
+    });
+    this._cardComponent.setWatchedButtonClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, this._film, Object.assign({}, this._film, {
+        userDetails: {
+          isAlreadyWatched: !this._film.userDetails.isAlreadyWatched,
+          isInWatchlist: this._film.userDetails.isInWatchlist,
+          isFavorite: this._film.userDetails.isFavorite,
+        }
+      }));
+    });
+    this._cardComponent.setFavoriteButtonClickHandler((evt) => {
+      evt.preventDefault();
+      this._onDataChange(this, this._film, Object.assign({}, this._film, {
+        userDetails: {
+          isFavorite: !this._film.userDetails.isFavorite,
+          isInWatchlist: this._film.userDetails.isInWatchlist,
+          isAlreadyWatched: this._film.userDetails.isAlreadyWatched,
+        }
+      }));
+    });
 
-    render(this._container, this._cardComponent, RenderPosition.BEFOREEND);
+    if (oldCard) {
+      replace(this._cardComponent, oldCard);
+    } else {
+      render(this._container, this._cardComponent, RenderPosition.BEFOREEND);
+    }
   }
 }
