@@ -1,4 +1,4 @@
-import {getRandomBoolean, getRandomArrayItem, getRandomDate} from '../utils.js';
+import {getRandomBoolean, getRandomArrayItem} from '../utils.js';
 import {EMOTIONS, COMMENT_TEXTS} from '../const.js';
 
 const getComment = () => {
@@ -8,7 +8,7 @@ const getComment = () => {
     author,
     comment: getRandomArrayItem(COMMENT_TEXTS),
     emotion: getRandomArrayItem(EMOTIONS),
-    date: getRandomDate()
+    date: new Date()
   };
 };
 

@@ -2,16 +2,6 @@ import {FILM_CARDS_COUNT, POSTER_ITEMS, GENRE_ITEMS, DESCRIPTION_ITEMS, TITLE_IT
 import {getRandomArrayItem, getRandomBoolean, getRandomDecimalNumber, getRandomIntegerNumber} from '../utils.js';
 import {getComments} from '../mock/comment.js';
 
-const getRuntime = () => {
-  const hours = `${getRandomIntegerNumber(0, 2)}h `;
-  const minutes = `${getRandomIntegerNumber(1, 59)}m`;
-  let duration = `${hours}${minutes}`;
-  if (hours === `0h `) {
-    return minutes;
-  }
-  return duration;
-};
-
 const getDescription = () => {
   let description = ``;
   const descriptionLength = getRandomIntegerNumber(1, 3);
@@ -40,7 +30,7 @@ const generateFilm = () => {
         date: new Date(),
         country: `USA`,
       },
-      runtime: getRuntime(),
+      runtime: getRandomIntegerNumber(20, 180),
       genre,
       description: getDescription(),
     },

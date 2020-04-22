@@ -23,17 +23,6 @@ const getRandomArrayItem = (array) => {
   return array[randomIndex];
 };
 
-const getRandomDate = () => {
-  const targetDate = new Date();
-  const year = targetDate.getFullYear();
-  const month = targetDate.getMonth() + 1;
-  const day = targetDate.getDay();
-  const hours = targetDate.getHours() < 10 ? `0${targetDate.getHours()}` : targetDate.getHours();
-  const minutes = targetDate.getMinutes() < 10 ? `0${targetDate.getMinutes()}` : targetDate.getMinutes();
-
-  return `${year}/${month}/${day} ${hours}:${minutes}`;
-};
-
 const getProfileRating = (count) => {
   let result = ``;
   if (count > 1 && count <= 10) {
@@ -102,7 +91,6 @@ export {
   getProfileRating,
   getRandomArrayItem,
   getRandomBoolean,
-  getRandomDate,
   getRandomDecimalNumber,
   getRandomIntegerNumber,
   getWatchedFilmsCount,

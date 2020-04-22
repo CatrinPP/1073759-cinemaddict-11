@@ -1,14 +1,18 @@
 import AbstractComponent from './abstract-component.js';
+import moment from 'moment';
 
 const createFilmCardTemplate = (film) => {
   const genres = film.filmInfo.genre.join(`, `);
+  const runtime = moment.duration(film.filmInfo.runtime, `m`);
+  const runtimeToShow = runtime.hours() === 0 ? `${runtime.minutes()}m` : `${runtime.hours()}h ${runtime.minutes()}m`;
+
   return (
     `<article class="film-card">
       <h3 class="film-card__title">${film.filmInfo.title}</h3>
       <p class="film-card__rating">${film.filmInfo.totalRating}</p>
       <p class="film-card__info">
-        <span class="film-card__year">${film.filmInfo.release.date.getFullYear()}</span>
-        <span class="film-card__duration">${film.filmInfo.runtime}</span>
+        <span class="film-card__year">${moment(film.filmInfo.release.date).format(`YYYY`)}</span>
+        <span class="film-card__duration">${runtimeToShow}</span>
         <span class="film-card__genre">${genres}</span>
       </p>
       <img src=${film.filmInfo.poster} alt="" class="film-card__poster">
