@@ -4,9 +4,10 @@ import {ESC_KEYCODE, RenderPosition} from '../const.js';
 import {remove, render, replace} from '../utils.js';
 
 export default class FilmController {
-  constructor(container, onDataChange) {
+  constructor(container, onDataChange, onViewChange) {
     this._container = container;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
 
     this._cardComponent = null;
     this._popupComponent = null;
@@ -25,21 +26,25 @@ export default class FilmController {
 
   _onEscPress(evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      this._closePopup();
-      document.removeEventListener(`keydown`, this._onEscPress);
+      this.setDefaultView();
     }
   }
 
   _onPopupCloseButtonClick() {
-    this._closePopup();
-    document.removeEventListener(`keydown`, this._onEscPress);
+    this.setDefaultView();
   }
 
   _onFilmCardClick() {
+    this._onViewChange();
     render(document.body, this._popupComponent, RenderPosition.BEFOREEND);
     this._popupComponent.setClickHandler(this._onPopupCloseButtonClick);
     this._popupComponent.setEmojiClickHandler();
     document.addEventListener(`keydown`, this._onEscPress);
+  }
+
+  setDefaultView() {
+    this._closePopup();
+    document.removeEventListener(`keydown`, this._onEscPress);
   }
 
   render(film) {
