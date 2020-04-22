@@ -1,4 +1,4 @@
-import AbstractComponent from './abstract-component.js';
+import AbstractSmartComponent from './abstract-smart-component.js';
 
 const createGenreItemMarkup = (genre) => {
   return (
@@ -24,11 +24,18 @@ const createCommentItemMarkup = (comment) => {
   );
 };
 
-const createFilmDetailsTemplate = (film) => {
+const createEmojiMarkup = (emojiName) => {
+  return (
+    `<img src="./images/emoji/${emojiName}.png" width="55" height="55" alt="emoji-${emojiName}">`
+  );
+};
+
+const createFilmDetailsTemplate = (film, emoji) => {
   const writers = film.filmInfo.writers.join(`, `);
   const actors = film.filmInfo.actors.join(`, `);
   const genres = film.filmInfo.genre.map((item) => createGenreItemMarkup(item)).join(`\n`);
   const comments = film.comments.map((item) => createCommentItemMarkup(item)).join(`\n`);
+  const isEmoji = emoji ? createEmojiMarkup(emoji) : ``;
 
   return (
     `<section class="film-details">
@@ -94,13 +101,13 @@ const createFilmDetailsTemplate = (film) => {
           </div>
 
           <section class="film-details__controls">
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${film.userDetails.isInWatchlist ? `checked` : ``}>
             <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${film.userDetails.isAlreadyWatched ? `checked` : ``}>
             <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+            <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${film.userDetails.isFavorite ? `checked` : ``}>
             <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
           </section>
         </div>
@@ -114,7 +121,7 @@ const createFilmDetailsTemplate = (film) => {
             </ul>
 
             <div class="film-details__new-comment">
-              <div for="add-emoji" class="film-details__add-emoji-label"></div>
+              <div for="add-emoji" class="film-details__add-emoji-label">${isEmoji}</div>
 
               <label class="film-details__comment-label">
                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -149,18 +156,51 @@ const createFilmDetailsTemplate = (film) => {
   );
 };
 
-export default class FilmDetails extends AbstractComponent {
+export default class FilmDetails extends AbstractSmartComponent {
   constructor(filmCard) {
     super();
     this._filmCard = filmCard;
+    this._chosenEmoji = null;
+    this._clickHandler = null;
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._filmCard);
+    return createFilmDetailsTemplate(this._filmCard, this._chosenEmoji);
+  }
+
+  recoveryListeners() {
+    this.setClickHandler(this._clickHandler);
+    this.setEmojiClickHandler();
+  }
+
+  setEmojiClickHandler() {
+    const emojis = Array.from(this.getElement().querySelectorAll(`.film-details__emoji-item`));
+    emojis.map((emoji) => {
+      emoji.addEventListener(`click`, (evt) => {
+        this._chosenEmoji = evt.target.value;
+        this.rerender();
+      });
+    });
   }
 
   setClickHandler(handler) {
     const popupCloseButton = this.getElement().querySelector(`.film-details__close-btn`);
     popupCloseButton.addEventListener(`click`, handler);
+    this._clickHandler = handler;
+
+    this.getElement().querySelector(`#watchlist`)
+      .addEventListener(`click`, () => {
+        this._filmCard.userDetails.isInWatchlist = !this._filmCard.userDetails.isInWatchlist;
+      });
+
+    this.getElement().querySelector(`#watched`)
+      .addEventListener(`click`, () => {
+        this._filmCard.userDetails.isAlreadyWatched = !this._filmCard.userDetails.isAlreadyWatched;
+      });
+
+    this.getElement().querySelector(`#favorite`)
+      .addEventListener(`click`, () => {
+        this._filmCard.userDetails.isFavorite = !this._filmCard.userDetails.isFavorite;
+      });
   }
 }
