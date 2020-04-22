@@ -24,11 +24,18 @@ const createCommentItemMarkup = (comment) => {
   );
 };
 
-const createFilmDetailsTemplate = (film) => {
+const createEmojiMarkup = (emojiName) => {
+  return (
+    `<img src="./images/emoji/${emojiName}.png" width="55" height="55" alt="emoji-${emojiName}">`
+  );
+};
+
+const createFilmDetailsTemplate = (film, emoji) => {
   const writers = film.filmInfo.writers.join(`, `);
   const actors = film.filmInfo.actors.join(`, `);
   const genres = film.filmInfo.genre.map((item) => createGenreItemMarkup(item)).join(`\n`);
   const comments = film.comments.map((item) => createCommentItemMarkup(item)).join(`\n`);
+  const isEmoji = emoji ? createEmojiMarkup(emoji) : ``;
 
   return (
     `<section class="film-details">
@@ -114,7 +121,7 @@ const createFilmDetailsTemplate = (film) => {
             </ul>
 
             <div class="film-details__new-comment">
-              <div for="add-emoji" class="film-details__add-emoji-label"></div>
+              <div for="add-emoji" class="film-details__add-emoji-label">${isEmoji}</div>
 
               <label class="film-details__comment-label">
                 <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -153,19 +160,33 @@ export default class FilmDetails extends AbstractSmartComponent {
   constructor(filmCard) {
     super();
     this._filmCard = filmCard;
+    this._chosenEmoji = null;
+    this._clickHandler = null;
   }
 
   getTemplate() {
-    return createFilmDetailsTemplate(this._filmCard);
+    return createFilmDetailsTemplate(this._filmCard, this._chosenEmoji);
   }
 
   recoveryListeners() {
+    this.setClickHandler(this._clickHandler);
+    this.setEmojiClickHandler();
+  }
 
+  setEmojiClickHandler() {
+    const emojis = Array.from(this.getElement().querySelectorAll(`.film-details__emoji-item`));
+    emojis.map((emoji) => {
+      emoji.addEventListener(`click`, (evt) => {
+        this._chosenEmoji = evt.target.value;
+        this.rerender();
+      });
+    });
   }
 
   setClickHandler(handler) {
     const popupCloseButton = this.getElement().querySelector(`.film-details__close-btn`);
     popupCloseButton.addEventListener(`click`, handler);
+    this._clickHandler = handler;
 
     this.getElement().querySelector(`#watchlist`)
       .addEventListener(`click`, () => {

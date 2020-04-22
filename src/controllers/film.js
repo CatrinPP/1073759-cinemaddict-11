@@ -38,6 +38,7 @@ export default class FilmController {
   _onFilmCardClick() {
     render(document.body, this._popupComponent, RenderPosition.BEFOREEND);
     this._popupComponent.setClickHandler(this._onPopupCloseButtonClick);
+    this._popupComponent.setEmojiClickHandler();
     document.addEventListener(`keydown`, this._onEscPress);
   }
 
