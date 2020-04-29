@@ -42,6 +42,12 @@ export default class FilmController {
     document.addEventListener(`keydown`, this._onEscPress);
   }
 
+  destroy() {
+    remove(this._cardComponent);
+    remove(this._popupComponent);
+    document.removeEventListener(`keydown`, this._onEscKeyDown);
+  }
+
   setDefaultView() {
     this._closePopup();
     document.removeEventListener(`keydown`, this._onEscPress);

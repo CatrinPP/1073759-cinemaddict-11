@@ -29,6 +29,8 @@ export default class PageController {
     this._sortComponent.setSortTypeChangeHadler(this._onSortTypeChange);
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+    this._filmsModel.setFilterChangeHandler(this._onFilterChange);
   }
 
   _renderFilmCards(array, container, count, onDataChange, onViewCHange) {
@@ -106,6 +108,22 @@ export default class PageController {
 
   _onViewChange() {
     this._showedFilmsControllers.forEach((item) => item.setDefaultView());
+  }
+
+  _onFilterChange() {
+    this._showingFilmCardsCount = SHOWING_CARDS_COUNT_ON_START;
+    this._sortComponent.resetSortType();
+    this._updateFilms();
+  }
+
+  _removeFilms() {
+    this._showedFilmsControllers.forEach((filmController) => filmController.destroy());
+    this._showedFilmsControllers = [];
+  }
+
+  _updateFilms() {
+    this._removeFilms();
+    this.render();
   }
 
   render() {
