@@ -15,9 +15,10 @@ export default class Films {
     const index = this._films.findIndex((it) => it.id === id);
 
     if (index === -1) {
-      return;
+      return false;
     }
 
     this._films = [].concat(this._films.slice(0, index), film, this._films.slice(index + 1));
+    return true;
   }
 }
