@@ -7,27 +7,9 @@ const createGenreItemMarkup = (genre) => {
   );
 };
 
-const createCommentItemMarkup = (comment) => {
-  return (
-    `<li class="film-details__comment">
-      <span class="film-details__comment-emoji">
-        <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-${comment.emotion}">
-      </span>
-      <div>
-        <p class="film-details__comment-text">${comment.comment}</p>
-        <p class="film-details__comment-info">
-          <span class="film-details__comment-author">${comment.author}</span>
-          <span class="film-details__comment-day">${moment(comment.date).format(`YYYY/MM/DD HH:MM`)}</span>
-          <button class="film-details__comment-delete">Delete</button>
-        </p>
-      </div>
-    </li>`
-  );
-};
-
 const createEmojiMarkup = (emojiName) => {
   return (
-    `<img src="./images/emoji/${emojiName}.png" width="55" height="55" alt="emoji-${emojiName}">`
+    `<img src="./images/emoji/${emojiName}.png" data-emoji="${emojiName}" width="55" height="55" alt="emoji-${emojiName}">`
   );
 };
 
@@ -35,7 +17,6 @@ const createFilmDetailsTemplate = (film, emoji) => {
   const writers = film.filmInfo.writers.join(`, `);
   const actors = film.filmInfo.actors.join(`, `);
   const genres = film.filmInfo.genre.map((item) => createGenreItemMarkup(item)).join(`\n`);
-  const comments = film.comments.map((item) => createCommentItemMarkup(item)).join(`\n`);
   const isEmoji = emoji ? createEmojiMarkup(emoji) : ``;
   const runtime = moment.duration(film.filmInfo.runtime, `m`);
   const runtimeToShow = runtime.hours() === 0 ? `${runtime.minutes()}m` : `${runtime.hours()}h ${runtime.minutes()}m`;
@@ -119,9 +100,7 @@ const createFilmDetailsTemplate = (film, emoji) => {
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments.length}</span></h3>
 
-            <ul class="film-details__comments-list">
-            ${comments}
-            </ul>
+            <ul class="film-details__comments-list"></ul>
 
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label">${isEmoji}</div>
@@ -165,6 +144,8 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._filmCard = filmCard;
     this._chosenEmoji = null;
     this._clickHandler = null;
+    this._submitHandler = null;
+    this._emojiClickHandler = null;
   }
 
   getTemplate() {
@@ -173,15 +154,18 @@ export default class FilmDetails extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.setClickHandler(this._clickHandler);
-    this.setEmojiClickHandler();
+    this.setEmojiClickHandler(this._emojiClickHandler);
+    this.setSubmitHandler(this._submitHandler);
   }
 
-  setEmojiClickHandler() {
+  setEmojiClickHandler(handler) {
     const emojis = Array.from(this.getElement().querySelectorAll(`.film-details__emoji-item`));
     emojis.map((emoji) => {
       emoji.addEventListener(`click`, (evt) => {
         this._chosenEmoji = evt.target.value;
         this.rerender();
+        handler();
+        this._emojiClickHandler = handler;
       });
     });
   }
@@ -205,5 +189,11 @@ export default class FilmDetails extends AbstractSmartComponent {
       .addEventListener(`click`, () => {
         this._filmCard.userDetails.isFavorite = !this._filmCard.userDetails.isFavorite;
       });
+  }
+
+  setSubmitHandler(handler) {
+    this.getElement().querySelector(`.film-details__new-comment`)
+      .addEventListener(`keydown`, handler);
+    this._submitHandler = handler;
   }
 }

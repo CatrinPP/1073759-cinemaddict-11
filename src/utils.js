@@ -1,4 +1,4 @@
-import {FilterTitle, ProfileRating, RenderPosition} from './const.js';
+import {FilterType, ProfileRating, RenderPosition} from './const.js';
 
 const createElement = (template) => {
   const newElement = document.createElement(`div`);
@@ -45,15 +45,48 @@ const getFilters = (films) => {
   const alreadyWatchedCount = getWatchedFilmsCount(films);
 
   return [{
-    name: FilterTitle.WATCHLIST,
+    id: `all`,
+    name: FilterType.ALL,
+    count: films.length
+  }, {
+    id: `watchlist`,
+    name: FilterType.WATCHLIST,
     count: watchlistCount
   }, {
-    name: FilterTitle.HISTORY,
+    id: `history`,
+    name: FilterType.HISTORY,
     count: alreadyWatchedCount
   }, {
-    name: FilterTitle.FAVORITES,
+    id: `favorites`,
+    name: FilterType.FAVORITES,
     count: favoritesCount
   }];
+};
+
+const getFavoriteFilms = (films) => {
+  return films.filter((film) => film.userDetails.isFavorite);
+};
+
+const getWatchedFilms = (films) => {
+  return films.filter((film) => film.userDetails.isAlreadyWatched);
+};
+
+const getWatchlistFilms = (films) => {
+  return films.filter((film) => film.userDetails.isInWatchlist);
+};
+
+const getFilmsByFilter = (films, filterType) => {
+  switch (filterType) {
+    case FilterType.ALL:
+      return films;
+    case FilterType.FAVORITES:
+      return getFavoriteFilms(films);
+    case FilterType.HISTORY:
+      return getWatchedFilms(films);
+    case FilterType.WATCHLIST:
+      return getWatchlistFilms(films);
+  }
+  return films;
 };
 
 const render = (container, component, place) => {
@@ -87,6 +120,7 @@ const replace = (newComponent, oldComponent) => {
 
 export {
   createElement,
+  getFilmsByFilter,
   getFilters,
   getProfileRating,
   getRandomArrayItem,

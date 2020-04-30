@@ -16,6 +16,7 @@ const generateFilm = () => {
   const genre = GENRE_ITEMS.filter(() => Math.random() > 0.5);
 
   return {
+    id: String(new Date() + Math.random()),
     comments: getComments(getRandomIntegerNumber(0, 5)),
     filmInfo: {
       title,
