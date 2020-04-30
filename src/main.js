@@ -28,4 +28,4 @@ render(headerElement, new ProfileComponent(wathedFilmsCount), RenderPosition.BEF
 render(footerElement, new FooterStatistics(films.length), RenderPosition.BEFOREEND);
 render(mainElement, sortComponent, RenderPosition.BEFOREEND);
 render(mainElement, filmsComponent, RenderPosition.BEFOREEND);
-pageController.render(films);
+pageController.render();

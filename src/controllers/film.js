@@ -1,7 +1,10 @@
 import FilmCardComponent from '../components/film-card.js';
 import FilmDetailsComponent from '../components/films-details.js';
-import {ESC_KEYCODE, RenderPosition} from '../const.js';
-import {remove, render, replace} from '../utils.js';
+import CommentsModel from '../models/comments.js';
+import {ENTER_KEYCODE, ESC_KEYCODE, RenderPosition} from '../const.js';
+import {remove, render, replace, getRandomBoolean} from '../utils.js';
+import CommentController from './comment.js';
+import he from 'he';
 
 export default class FilmController {
   constructor(container, onDataChange, onViewChange) {
@@ -12,16 +15,35 @@ export default class FilmController {
     this._cardComponent = null;
     this._popupComponent = null;
     this._film = null;
+    this._commentsModel = null;
 
     this._onPopupCloseButtonClick = this._onPopupCloseButtonClick.bind(this);
     this._onFilmCardClick = this._onFilmCardClick.bind(this);
     this._onEscPress = this._onEscPress.bind(this);
     this._closePopup = this._closePopup.bind(this);
+    this._onCommentsDataChange = this._onCommentsDataChange.bind(this);
+    this._onNewCommentSubmit = this._onNewCommentSubmit.bind(this);
+    this._onEmojiClick = this._onEmojiClick.bind(this);
   }
 
   _closePopup() {
     remove(this._popupComponent);
     this._onDataChange(this, this._film, this._film);
+  }
+
+  _onCommentsDataChange(oldDataId, newData) {
+    if (oldDataId === null) {
+      this._commentsModel.addComment(newData);
+      const parent = document.querySelector(`.film-details__comments-list`);
+      parent.innerHTML = ``;
+      this._renderComments(this._commentsModel.getComments(), this._onCommentsDataChange);
+    }
+
+    if (newData === null) {
+      this._commentsModel.removeComment(oldDataId);
+      const count = this._popupComponent.getElement().querySelector(`.film-details__comments-count`);
+      count.textContent = this._commentsModel.getComments().length;
+    }
   }
 
   _onEscPress(evt) {
@@ -34,12 +56,49 @@ export default class FilmController {
     this.setDefaultView();
   }
 
+  _onNewCommentSubmit(evt) {
+    if (evt.ctrlKey && evt.keyCode === ENTER_KEYCODE) {
+      const emotion = this._popupComponent.getElement().querySelector(`.film-details__add-emoji-label img`).dataset.emoji;
+      const newComment = {
+        id: String(new Date() + Math.random()),
+        author: getRandomBoolean() ? `Tim Macoveev` : `John Doe`,
+        comment: he.encode(evt.target.value),
+        emotion,
+        date: new Date(),
+      };
+
+      this._onCommentsDataChange(null, newComment);
+      evt.target.value = null;
+      const count = this._popupComponent.getElement().querySelector(`.film-details__comments-count`);
+      count.textContent = this._commentsModel.getComments().length;
+    }
+  }
+
+  _onEmojiClick() {
+    this._renderComments(this._commentsModel.getComments(), this._onCommentsDataChange);
+  }
+
   _onFilmCardClick() {
     this._onViewChange();
     render(document.body, this._popupComponent, RenderPosition.BEFOREEND);
-    this._popupComponent.setClickHandler(this._onPopupCloseButtonClick);
-    this._popupComponent.setEmojiClickHandler();
+    this._popupComponent.setClickHandler(this._onPopupCloseButtonClick, this._onDeleteButtonClick);
+    this._popupComponent.setEmojiClickHandler(this._onEmojiClick);
+    this._popupComponent.setSubmitHandler(this._onNewCommentSubmit);
+    this._commentsModel = new CommentsModel();
+    this._commentsModel.setComments(this._film.comments);
+    this._renderComments(this._commentsModel.getComments(), this._onCommentsDataChange);
     document.addEventListener(`keydown`, this._onEscPress);
+  }
+
+  _renderComments(array, onCommentsDataChange) {
+    const commentsList = this._popupComponent.getElement().querySelector(`.film-details__comments-list`);
+    const commentsControllers = [];
+    for (let i = 0; i < array.length; i++) {
+      const commentController = new CommentController(commentsList, onCommentsDataChange);
+      commentController.render(array[i]);
+      commentsControllers.push(commentController);
+    }
+    return commentsControllers;
   }
 
   destroy() {
