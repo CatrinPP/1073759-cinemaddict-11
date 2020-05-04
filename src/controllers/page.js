@@ -7,10 +7,11 @@ import {FILM_CARDS_EXTRA_COUNT, RenderPosition, SHOWING_CARDS_COUNT_ON_START, SH
 import {remove, render} from '../utils.js';
 
 export default class PageController {
-  constructor(container, sortComponent, filmsModel) {
+  constructor(container, sortComponent, filmsModel, api) {
     this._container = container;
     this._sortComponent = sortComponent;
     this._filmsModel = filmsModel;
+    this._api = api;
     this._noFilmsComponent = new NoFilmsComponent();
     this._filmsListComponent = new FilmsListComponent();
     this._filmsListTopRatedComponent = new FilmsListExtraComponent(`Top rated`);
@@ -36,7 +37,7 @@ export default class PageController {
   _renderFilmCards(array, container, count, onDataChange, onViewCHange) {
     const filmControllers = [];
     for (let i = 0; i < count; i++) {
-      const filmController = new FilmController(container, onDataChange, onViewCHange);
+      const filmController = new FilmController(container, onDataChange, onViewCHange, this._api);
       filmController.render(array[i]);
       filmControllers.push(filmController);
     }

@@ -7,10 +7,11 @@ import CommentController from './comment.js';
 import he from 'he';
 
 export default class FilmController {
-  constructor(container, onDataChange, onViewChange) {
+  constructor(container, onDataChange, onViewChange, api) {
     this._container = container;
     this._onDataChange = onDataChange;
     this._onViewChange = onViewChange;
+    this._api = api;
 
     this._cardComponent = null;
     this._popupComponent = null;
@@ -85,8 +86,13 @@ export default class FilmController {
     this._popupComponent.setEmojiClickHandler(this._onEmojiClick);
     this._popupComponent.setSubmitHandler(this._onNewCommentSubmit);
     this._commentsModel = new CommentsModel();
-    this._commentsModel.setComments(this._film.comments);
-    this._renderComments(this._commentsModel.getComments(), this._onCommentsDataChange);
+
+    this._api.getComments(this._film.id)
+    .then((comments) => {
+      this._commentsModel.setComments(comments);
+      this._renderComments(this._commentsModel.getComments(), this._onCommentsDataChange);
+    });
+
     document.addEventListener(`keydown`, this._onEscPress);
   }
 
