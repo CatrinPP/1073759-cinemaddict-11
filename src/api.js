@@ -31,6 +31,14 @@ const API = class {
       });
   }
 
+  deleteComment(commentId, onSuccess) {
+    return this._load({
+      url: `comments/${commentId}`,
+      method: Method.DELETE,
+    })
+    .then(onSuccess());
+  }
+
   getComments(filmId) {
     return this._load({url: `comments/${filmId}`})
       .then((response) => response.json())
@@ -41,6 +49,18 @@ const API = class {
     return this._load({url: `movies`})
       .then((response) => response.json())
       .then(Film.parseFilms);
+  }
+
+  postComment(filmId, data, onSuccess) {
+    return this._load({
+      url: `comments/${filmId}`,
+      method: Method.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': `application/json`})
+    })
+      .then((response) => response.json())
+      .then(onSuccess());
+
   }
 
   updateFilm(id, data) {

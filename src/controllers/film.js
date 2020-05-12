@@ -36,16 +36,27 @@ export default class FilmController {
 
   _onCommentsDataChange(oldDataId, newData) {
     if (oldDataId === null) {
-      this._commentsModel.addComment(newData);
-      const parent = document.querySelector(`.film-details__comments-list`);
-      parent.innerHTML = ``;
-      this._renderComments(this._commentsModel.getComments(), this._onCommentsDataChange);
+      const onSuccess = () => {
+        this._commentsModel.addComment(newData);
+        this._film.comments.push(newData.id);
+        const parent = document.querySelector(`.film-details__comments-list`);
+        parent.innerHTML = ``;
+        this._renderComments(this._commentsModel.getComments(), this._onCommentsDataChange);
+      };
+
+      this._api.postComment(this._film.id, newData, onSuccess);
     }
 
     if (newData === null) {
-      this._commentsModel.removeComment(oldDataId);
-      const count = this._popupComponent.getElement().querySelector(`.film-details__comments-count`);
-      count.textContent = this._commentsModel.getComments().length;
+      const onSuccess = () => {
+        this._commentsModel.removeComment(oldDataId);
+        const index = this._film.comments.findIndex((it) => it === oldDataId);
+        this._film.comments.splice(index, 1);
+        const count = this._popupComponent.getElement().querySelector(`.film-details__comments-count`);
+        count.textContent = this._commentsModel.getComments().length;
+      };
+
+      this._api.deleteComment(oldDataId, onSuccess);
     }
   }
 
