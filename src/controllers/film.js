@@ -1,6 +1,7 @@
 import FilmCardComponent from '../components/film-card.js';
 import FilmDetailsComponent from '../components/films-details.js';
 import CommentsModel from '../models/comments.js';
+import FilmModel from '../models/film.js';
 import {ENTER_KEYCODE, ESC_KEYCODE, RenderPosition} from '../const.js';
 import {remove, render, replace, getRandomBoolean} from '../utils.js';
 import CommentController from './comment.js';
@@ -28,8 +29,9 @@ export default class FilmController {
   }
 
   _closePopup() {
+    const newCard = FilmModel.clone(this._film);
     remove(this._popupComponent);
-    this._onDataChange(this, this._film, this._film);
+    this._onDataChange(this, this._film, newCard);
   }
 
   _onCommentsDataChange(oldDataId, newData) {
@@ -81,14 +83,14 @@ export default class FilmController {
 
   _onFilmCardClick() {
     this._onViewChange();
-    render(document.body, this._popupComponent, RenderPosition.BEFOREEND);
-    this._popupComponent.setClickHandler(this._onPopupCloseButtonClick, this._onDeleteButtonClick);
-    this._popupComponent.setEmojiClickHandler(this._onEmojiClick);
-    this._popupComponent.setSubmitHandler(this._onNewCommentSubmit);
-    this._commentsModel = new CommentsModel();
 
     this._api.getComments(this._film.id)
     .then((comments) => {
+      render(document.body, this._popupComponent, RenderPosition.BEFOREEND);
+      this._popupComponent.setClickHandler(this._onPopupCloseButtonClick, this._onDeleteButtonClick);
+      this._popupComponent.setEmojiClickHandler(this._onEmojiClick);
+      this._popupComponent.setSubmitHandler(this._onNewCommentSubmit);
+      this._commentsModel = new CommentsModel();
       this._commentsModel.setComments(comments);
       this._renderComments(this._commentsModel.getComments(), this._onCommentsDataChange);
     });
@@ -98,13 +100,13 @@ export default class FilmController {
 
   _renderComments(array, onCommentsDataChange) {
     const commentsList = this._popupComponent.getElement().querySelector(`.film-details__comments-list`);
-    const commentsControllers = [];
+    // const commentsControllers = [];
     for (let i = 0; i < array.length; i++) {
       const commentController = new CommentController(commentsList, onCommentsDataChange);
       commentController.render(array[i]);
-      commentsControllers.push(commentController);
+      // commentsControllers.push(commentController);
     }
-    return commentsControllers;
+    // return commentsControllers;
   }
 
   destroy() {
@@ -126,33 +128,21 @@ export default class FilmController {
     this._cardComponent.setCardClickHandler(this._onFilmCardClick);
     this._cardComponent.setWatchlistButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, this._film, Object.assign({}, this._film, {
-        userDetails: {
-          isInWatchlist: !this._film.userDetails.isInWatchlist,
-          isAlreadyWatched: this._film.userDetails.isAlreadyWatched,
-          isFavorite: this._film.userDetails.isFavorite,
-        }
-      }));
+      const newCard = FilmModel.clone(this._film);
+      newCard.userDetails.isInWatchlist = !newCard.userDetails.isInWatchlist;
+      this._onDataChange(this, this._film, newCard);
     });
     this._cardComponent.setWatchedButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, this._film, Object.assign({}, this._film, {
-        userDetails: {
-          isAlreadyWatched: !this._film.userDetails.isAlreadyWatched,
-          isInWatchlist: this._film.userDetails.isInWatchlist,
-          isFavorite: this._film.userDetails.isFavorite,
-        }
-      }));
+      const newCard = FilmModel.clone(this._film);
+      newCard.userDetails.isAlreadyWatched = !newCard.userDetails.isAlreadyWatched;
+      this._onDataChange(this, this._film, newCard);
     });
     this._cardComponent.setFavoriteButtonClickHandler((evt) => {
       evt.preventDefault();
-      this._onDataChange(this, this._film, Object.assign({}, this._film, {
-        userDetails: {
-          isFavorite: !this._film.userDetails.isFavorite,
-          isInWatchlist: this._film.userDetails.isInWatchlist,
-          isAlreadyWatched: this._film.userDetails.isAlreadyWatched,
-        }
-      }));
+      const newCard = FilmModel.clone(this._film);
+      newCard.userDetails.isFavorite = !newCard.userDetails.isFavorite;
+      this._onDataChange(this, this._film, newCard);
     });
 
     if (oldCard) {

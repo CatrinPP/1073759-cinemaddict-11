@@ -12,11 +12,13 @@ export default class PageController {
     this._sortComponent = sortComponent;
     this._filmsModel = filmsModel;
     this._api = api;
+
     this._noFilmsComponent = new NoFilmsComponent();
     this._filmsListComponent = new FilmsListComponent();
     this._filmsListTopRatedComponent = new FilmsListExtraComponent(`Top rated`);
     this._filmsListMostCommentedComponent = new FilmsListExtraComponent(`Most commented`);
     this._showMoreButtonComponent = new ShowMoreButtonComponent();
+
     this._showingFilmCardsCount = SHOWING_CARDS_COUNT_ON_START;
     this._filmsListElement = null;
     this._filmsListContainerElement = null;
@@ -100,11 +102,17 @@ export default class PageController {
   }
 
   _onDataChange(filmController, oldData, newData) {
-    const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
+    this._api.updateFilm(oldData.id, newData)
+      .then(() => {
+        const isSuccess = this._filmsModel.updateFilm(oldData.id, newData);
+        // .then((filmModel) => {
+        //   const isSuccess = this._filmsModel.updateFilm(oldData.id, filmModel);
 
-    if (isSuccess) {
-      filmController.render(newData);
-    }
+        if (isSuccess) {
+          // filmController.render(filmModel);
+          filmController.render(newData);
+        }
+      });
   }
 
   _onViewChange() {

@@ -1,5 +1,6 @@
 import {render, remove} from '../utils.js';
 import CommentComponent from '../components/comment.js';
+// import CommentModel from '../models/comment.js';
 import {RenderPosition} from '../const.js';
 
 export default class CommentController {

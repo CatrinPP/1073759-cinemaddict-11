@@ -10,13 +10,14 @@ import {RenderPosition} from './const.js';
 import {getWatchedFilmsCount, render} from './utils.js';
 
 const AUTHORIZATION = `Basic d=Nlc29kwYXNzdXyZAoB`;
+const END_POINT = `https://11.ecmascript.pages.academy/cinemaddict`;
 
 const headerElement = document.querySelector(`.header`);
 const mainElement = document.querySelector(`.main`);
 const footerElement = document.querySelector(`.footer`);
 const filmsComponent = new FilmsComponent();
 const sortComponent = new SortComponent();
-const api = new API(AUTHORIZATION);
+const api = new API(AUTHORIZATION, END_POINT);
 
 const filmsModel = new FilmsModel();
 const pageController = new PageController(filmsComponent, sortComponent, filmsModel, api);

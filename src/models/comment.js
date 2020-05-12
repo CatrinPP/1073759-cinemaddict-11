@@ -1,4 +1,4 @@
-export default class CommentAdapter {
+export default class Comment {
   constructor(data) {
     this.id = data[`id`];
     this.author = data[`author`];
@@ -8,10 +8,10 @@ export default class CommentAdapter {
   }
 
   static parseComment(data) {
-    return new CommentAdapter(data);
+    return new Comment(data);
   }
 
   static parseComments(data) {
-    return data.map(CommentAdapter.parseComment);
+    return data.map(Comment.parseComment);
   }
 }
