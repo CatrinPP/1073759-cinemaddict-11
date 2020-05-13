@@ -22,9 +22,11 @@ const api = new API(AUTHORIZATION, END_POINT);
 const filmsModel = new FilmsModel();
 const pageController = new PageController(filmsComponent, sortComponent, filmsModel, api);
 const filterController = new FilterController(mainElement, filmsModel);
+mainElement.append(`Loading...`);
 
 api.getFilms()
 .then((films) => {
+  mainElement.innerHTML = ``;
   filmsModel.setFilms(films);
   filterController.render();
   render(mainElement, sortComponent, RenderPosition.BEFOREEND);

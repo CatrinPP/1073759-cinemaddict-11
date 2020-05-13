@@ -22,16 +22,9 @@ export default class FilmController {
     this._onPopupCloseButtonClick = this._onPopupCloseButtonClick.bind(this);
     this._onFilmCardClick = this._onFilmCardClick.bind(this);
     this._onEscPress = this._onEscPress.bind(this);
-    this._closePopup = this._closePopup.bind(this);
     this._onCommentsDataChange = this._onCommentsDataChange.bind(this);
     this._onNewCommentSubmit = this._onNewCommentSubmit.bind(this);
     this._onEmojiClick = this._onEmojiClick.bind(this);
-  }
-
-  _closePopup() {
-    const newCard = FilmModel.clone(this._film);
-    remove(this._popupComponent);
-    this._onDataChange(this, this._film, newCard);
   }
 
   _onCommentsDataChange(oldDataId, newData) {
@@ -94,18 +87,17 @@ export default class FilmController {
 
   _onFilmCardClick() {
     this._onViewChange();
+    render(document.body, this._popupComponent, RenderPosition.BEFOREEND);
 
-    this._api.getComments(this._film.id)
-    .then((comments) => {
-      render(document.body, this._popupComponent, RenderPosition.BEFOREEND);
-      this._popupComponent.setClickHandler(this._onPopupCloseButtonClick, this._onDeleteButtonClick);
-      this._popupComponent.setEmojiClickHandler(this._onEmojiClick);
-      this._popupComponent.setSubmitHandler(this._onNewCommentSubmit);
+    const onSuccess = (comments) => {
+      this._popupComponent.rerender();
+      this._popupComponent.getElement().querySelector(`.film-details__comments-list`).innerHTML = ``;
       this._commentsModel = new CommentsModel();
       this._commentsModel.setComments(comments);
       this._renderComments(this._commentsModel.getComments(), this._onCommentsDataChange);
-    });
+    };
 
+    this._api.getComments(this._film.id, onSuccess);
     document.addEventListener(`keydown`, this._onEscPress);
   }
 
@@ -127,7 +119,7 @@ export default class FilmController {
   }
 
   setDefaultView() {
-    this._closePopup();
+    remove(this._popupComponent);
     document.removeEventListener(`keydown`, this._onEscPress);
   }
 
@@ -153,6 +145,25 @@ export default class FilmController {
       evt.preventDefault();
       const newCard = FilmModel.clone(this._film);
       newCard.userDetails.isFavorite = !newCard.userDetails.isFavorite;
+      this._onDataChange(this, this._film, newCard);
+    });
+
+    this._popupComponent.setClickHandler(this._onPopupCloseButtonClick);
+    this._popupComponent.setEmojiClickHandler(this._onEmojiClick);
+    this._popupComponent.setSubmitHandler(this._onNewCommentSubmit);
+    this._popupComponent.setWatchlistButtonClickHandler((evt) => {
+      const newCard = FilmModel.clone(this._film);
+      newCard.userDetails.isInWatchlist = evt.target.checked;
+      this._onDataChange(this, this._film, newCard);
+    });
+    this._popupComponent.setWatchedButtonClickHandler((evt) => {
+      const newCard = FilmModel.clone(this._film);
+      newCard.userDetails.isAlreadyWatched = evt.target.checked;
+      this._onDataChange(this, this._film, newCard);
+    });
+    this._popupComponent.setFavoriteButtonClickHandler((evt) => {
+      const newCard = FilmModel.clone(this._film);
+      newCard.userDetails.isFavorite = evt.target.checked;
       this._onDataChange(this, this._film, newCard);
     });
 

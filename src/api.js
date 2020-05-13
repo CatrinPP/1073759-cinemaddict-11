@@ -39,10 +39,11 @@ const API = class {
     .then(onSuccess());
   }
 
-  getComments(filmId) {
+  getComments(filmId, onSuccess) {
     return this._load({url: `comments/${filmId}`})
       .then((response) => response.json())
-      .then(Comment.parseComments);
+      .then(Comment.parseComments)
+      .then((data) => onSuccess(data));
   }
 
   getFilms() {

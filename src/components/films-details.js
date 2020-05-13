@@ -100,7 +100,7 @@ const createFilmDetailsTemplate = (film, emoji) => {
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${film.comments.length}</span></h3>
 
-            <ul class="film-details__comments-list"></ul>
+            <ul class="film-details__comments-list">Loading comments...</ul>
 
             <div class="film-details__new-comment">
               <div for="add-emoji" class="film-details__add-emoji-label">${isEmoji}</div>
@@ -146,6 +146,9 @@ export default class FilmDetails extends AbstractSmartComponent {
     this._clickHandler = null;
     this._submitHandler = null;
     this._emojiClickHandler = null;
+    this._watchlistButtonClickHandler = null;
+    this._watchedButtonClickHandler = null;
+    this._favoriteButtonClickHandler = null;
   }
 
   getTemplate() {
@@ -156,6 +159,9 @@ export default class FilmDetails extends AbstractSmartComponent {
     this.setClickHandler(this._clickHandler);
     this.setEmojiClickHandler(this._emojiClickHandler);
     this.setSubmitHandler(this._submitHandler);
+    this.setWatchlistButtonClickHandler(this._watchlistButtonClickHandler);
+    this.setWatchedButtonClickHandler(this._watchedButtonClickHandler);
+    this.setFavoriteButtonClickHandler(this._favoriteButtonClickHandler);
   }
 
   setEmojiClickHandler(handler) {
@@ -171,24 +177,27 @@ export default class FilmDetails extends AbstractSmartComponent {
   }
 
   setClickHandler(handler) {
-    const popupCloseButton = this.getElement().querySelector(`.film-details__close-btn`);
-    popupCloseButton.addEventListener(`click`, handler);
+    this.getElement().querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, handler);
     this._clickHandler = handler;
+  }
 
+  setWatchlistButtonClickHandler(handler) {
     this.getElement().querySelector(`#watchlist`)
-      .addEventListener(`click`, () => {
-        this._filmCard.userDetails.isInWatchlist = !this._filmCard.userDetails.isInWatchlist;
-      });
+      .addEventListener(`click`, handler);
+    this._watchlistButtonClickHandler = handler;
+  }
 
+  setWatchedButtonClickHandler(handler) {
     this.getElement().querySelector(`#watched`)
-      .addEventListener(`click`, () => {
-        this._filmCard.userDetails.isAlreadyWatched = !this._filmCard.userDetails.isAlreadyWatched;
-      });
+      .addEventListener(`click`, handler);
+    this._watchedButtonClickHandler = handler;
+  }
 
+  setFavoriteButtonClickHandler(handler) {
     this.getElement().querySelector(`#favorite`)
-      .addEventListener(`click`, () => {
-        this._filmCard.userDetails.isFavorite = !this._filmCard.userDetails.isFavorite;
-      });
+      .addEventListener(`click`, handler);
+    this._favoriteButtonClickHandler = handler;
   }
 
   setSubmitHandler(handler) {
